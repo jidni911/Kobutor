@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.activities.status;
 // ViewStatusActivity.java
 import android.net.Uri;
 import android.os.Bundle;

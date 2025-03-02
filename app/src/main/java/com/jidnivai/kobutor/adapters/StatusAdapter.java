@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.adapters;
 
 // StatusAdapter.java
 import android.content.Context;
@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.jidnivai.kobutor.R;
+import com.jidnivai.kobutor.models.StatusModel;
+import com.jidnivai.kobutor.activities.status.ViewStatusActivity;
 
 import java.util.List;
 

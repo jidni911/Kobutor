@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.activities.status;
 
 // AddStatusActivity.java
 import android.content.Intent;

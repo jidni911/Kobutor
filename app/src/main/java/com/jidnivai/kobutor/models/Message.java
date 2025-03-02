@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.messaging;
+package com.jidnivai.kobutor.models;
 
 // Message.java
 public class Message {

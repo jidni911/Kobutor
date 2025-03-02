@@ -1,12 +1,12 @@
-package com.jidnivai.kobutor.activities.messaging;
+package com.jidnivai.kobutor.models;
 
 // Chat.java
 public class Chat {
 
-    private int id;
-    private String name;
-    private String lastMessage;
-    private String time;
+    int id;
+    String name;
+    String lastMessage;
+    String time;
 
     public Chat(int id, String name, String lastMessage, String time) {
         this.id = id;

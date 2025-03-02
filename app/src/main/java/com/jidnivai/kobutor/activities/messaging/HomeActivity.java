@@ -3,15 +3,18 @@ package com.jidnivai.kobutor.activities.messaging;
 // MainActivity.java
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jidnivai.kobutor.R;
+import com.jidnivai.kobutor.activities.chat.ChatActivity;
+import com.jidnivai.kobutor.activities.chat.NewChatActivity;
+import com.jidnivai.kobutor.adapters.ChatsAdapter;
+import com.jidnivai.kobutor.models.Chat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,8 @@ public class HomeActivity extends AppCompatActivity {
     List<Chat> chatList = new ArrayList<>();
     FloatingActionButton fabNewChat;
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
 
         recyclerViewChats = findViewById(R.id.recyclerViewChats);
         fabNewChat = findViewById(R.id.fabNewChat);
+        toolbar = findViewById(R.id.toolbar);
 
         // Set up RecyclerView
         recyclerViewChats.setLayoutManager(new LinearLayoutManager(this));
@@ -53,6 +59,16 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, NewChatActivity.class);
             startActivity(intent);
         });
+        toolbar.setTitle("Recent Chats");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.icon_background));
+        //TODO work with tool bar
     }
 
     private void loadRecentChats() {

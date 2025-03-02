@@ -1,18 +1,16 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.activities.status;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jidnivai.kobutor.R;
+import com.jidnivai.kobutor.adapters.StatusAdapter;
+import com.jidnivai.kobutor.models.StatusModel;
 
 import java.util.ArrayList;
 import java.util.List;

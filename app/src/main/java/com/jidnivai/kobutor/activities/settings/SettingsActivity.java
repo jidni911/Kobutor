@@ -1,26 +1,25 @@
-package com.jidnivai.kobutor.activities.userandsettings;
+package com.jidnivai.kobutor.activities.settings;
 
 // SettingsActivity.java
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.jidnivai.kobutor.R;
 import com.jidnivai.kobutor.activities.auth.LoginActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private Switch notificationSwitch;
-    private RadioGroup themeRadioGroup;
-    private RadioButton radioLight, radioDark;
-    private Button logoutButton;
+    MaterialSwitch notificationSwitch;
+    RadioGroup themeRadioGroup;
+    RadioButton radioLight, radioDark;
+    Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,14 +1,15 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.activities.search;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jidnivai.kobutor.R;
+import com.jidnivai.kobutor.adapters.SearchAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

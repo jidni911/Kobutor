@@ -13,37 +13,37 @@
         android:theme="@style/Theme.Kobutor"
         tools:targetApi="31">
         <activity
-            android:name=".activities.additional.AddStatusActivity"
+            android:name=".activities.status.AddStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.additional.ViewStatusActivity"
+            android:name=".activities.status.ViewStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.additional.SearchActivity"
+            android:name=".activities.search.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.additional.MediaPreviewActivity"
+            android:name=".activities.media.MediaPreviewActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.additional.StatusActivity"
+            android:name=".activities.status.StatusActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.additional.CallActivity"
+            android:name=".activities.calls.CallActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.userandsettings.SettingsActivity"
+            android:name=".activities.settings.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.userandsettings.ProfileActivity"
+            android:name=".activities.profile.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.messaging.GroupChatActivity"
+            android:name=".activities.chat.GroupChatActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.messaging.NewChatActivity"
+            android:name=".activities.chat.NewChatActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.messaging.ChatActivity"
+            android:name=".activities.chat.ChatActivity"
             android:exported="false" />
         <activity
             android:name=".activities.messaging.HomeActivity"

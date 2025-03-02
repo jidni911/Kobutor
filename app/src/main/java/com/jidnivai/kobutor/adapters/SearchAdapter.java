@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.adapters;
 
 // SearchAdapter.java
 import android.view.LayoutInflater;

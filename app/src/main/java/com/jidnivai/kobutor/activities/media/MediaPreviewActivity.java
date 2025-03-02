@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.activities.media;
 
 // MediaPreviewActivity.java
 import android.content.Intent;

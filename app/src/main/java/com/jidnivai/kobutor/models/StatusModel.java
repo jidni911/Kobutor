@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.models;
 
 // StatusModel.java
 public class StatusModel {

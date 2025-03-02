@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.additional;
+package com.jidnivai.kobutor.activities.calls;
 
 // CallActivity.java
 import android.os.Bundle;

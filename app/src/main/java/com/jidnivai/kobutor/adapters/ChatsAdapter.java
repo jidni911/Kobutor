@@ -1,4 +1,4 @@
-package com.jidnivai.kobutor.activities.messaging;
+package com.jidnivai.kobutor.adapters;
 
 // ChatsAdapter.java
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jidnivai.kobutor.R;
+import com.jidnivai.kobutor.models.Chat;
 
 import java.util.List;
 
