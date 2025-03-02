@@ -3,16 +3,22 @@ package com.jidnivai.kobutor.activities.messaging;
 // MainActivity.java
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.jidnivai.kobutor.R;
 import com.jidnivai.kobutor.activities.chat.ChatActivity;
 import com.jidnivai.kobutor.activities.chat.NewChatActivity;
+import com.jidnivai.kobutor.activities.settings.SettingsActivity;
 import com.jidnivai.kobutor.adapters.ChatsAdapter;
 import com.jidnivai.kobutor.models.Chat;
 
@@ -59,16 +65,33 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, NewChatActivity.class);
             startActivity(intent);
         });
-        toolbar.setTitle("Recent Chats");
+//        toolbar.setTitle("Recent Chats");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        toolbar.setBackgroundColor(getResources().getColor(R.color.icon_background));
+//        toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+//        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+//        toolbar.setBackgroundColor(getResources().getColor(R.color.icon_background));
         //TODO work with tool bar
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu resource
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        View rootView = findViewById(android.R.id.content);
+        if (item.getItemId() == R.id.action_settings) {
+            startActivity(new Intent(rootView.getContext(), SettingsActivity.class));
+        }
+        return true;
     }
 
     private void loadRecentChats() {
@@ -78,4 +101,6 @@ public class HomeActivity extends AppCompatActivity {
         chatList.add(new Chat(3, "Mike", "Let's meet up soon.", "8:00 AM"));
         chatsAdapter.notifyDataSetChanged();
     }
+
+
 }

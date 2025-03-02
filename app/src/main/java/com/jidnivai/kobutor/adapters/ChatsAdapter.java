@@ -15,8 +15,8 @@ import java.util.List;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHolder> {
 
-    private List<Chat> chatList;
-    private OnChatClickListener listener;
+    List<Chat> chatList;
+    OnChatClickListener listener;
 
     public ChatsAdapter(List<Chat> chatList, OnChatClickListener listener) {
         this.chatList = chatList;
