@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Full Name Input -->
+    <EditText
+        android:id="@+id/edtFullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Full Name"
+        android:inputType="text" />
+
+    <!-- Username Input -->
+    <EditText
+        android:id="@+id/edtUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:layout_below="@id/edtFullName"
+        android:layout_marginTop="16dp"
+        android:inputType="text" />
+
+    <!-- Email Input -->
+    <EditText
+        android:id="@+id/edtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:layout_below="@id/edtUsername"
+        android:layout_marginTop="16dp"
+        android:inputType="textEmailAddress" />
+
+    <!-- Password Input -->
+    <EditText
+        android:id="@+id/edtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:layout_below="@id/edtEmail"
+        android:layout_marginTop="16dp"
+        android:inputType="textPassword" />
+
+    <!-- Retype Password Input -->
+    <EditText
+        android:id="@+id/edtRetypePassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Retype Password"
+        android:layout_below="@id/edtPassword"
+        android:layout_marginTop="16dp"
+        android:inputType="textPassword" />
+
+    <!-- Gender Selection -->
+    <RadioGroup
+        android:id="@+id/radioGroupGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtRetypePassword"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male" />
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female" />
+
+        <RadioButton
+            android:id="@+id/radioOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other" />
+    </RadioGroup>
+
+    <!-- Date of Birth Input -->
+    <EditText
+        android:id="@+id/edtDOB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date of Birth (yyyy-mm-dd)"
+        android:layout_below="@id/radioGroupGender"
+        android:layout_marginTop="16dp"
+        android:inputType="date" />
+
+    <!-- Phone Number Input -->
+    <EditText
+        android:id="@+id/edtPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number"
+        android:layout_below="@id/edtDOB"
+        android:layout_marginTop="16dp"
+        android:inputType="phone" />
+
+    <!-- Address Input -->
+    <EditText
+        android:id="@+id/edtAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Address"
+        android:layout_below="@id/edtPhoneNumber"
+        android:layout_marginTop="16dp"
+        android:inputType="text" />
+
+    <!-- Error Message for Validation -->
+    <TextView
+        android:id="@+id/tvErrorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_below="@id/edtAddress"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:text="Please fill all fields correctly" />
+
+    <!-- Register Button -->
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:layout_below="@id/tvErrorMessage"
+        android:layout_marginTop="24dp" />
+</RelativeLayout>

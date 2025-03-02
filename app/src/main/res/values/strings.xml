@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Kobutor</string>
+    <string name="username">Username</string>
+    <string name="app_logo">App Logo</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="image">Image</string>
+    <string name="add_a_caption">Add a caption</string>
+    <string name="cancel">Cancel</string>
+    <string name="send">Send</string>
+    <string name="add_button">Add Button</string>
+</resources>

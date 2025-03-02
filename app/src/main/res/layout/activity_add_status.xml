@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Button to pick image/video -->
+    <Button
+        android:id="@+id/btnPickMedia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Image or Video" />
+
+    <!-- Image Preview (Hidden Initially) -->
+    <ImageView
+        android:id="@+id/imagePreview"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/btnPickMedia"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:scaleType="centerCrop" />
+
+    <!-- Video Preview (Hidden Initially) -->
+    <VideoView
+        android:id="@+id/videoPreview"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/btnPickMedia"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
+
+    <!-- Upload Button -->
+    <Button
+        android:id="@+id/btnUploadStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Upload Status"
+        android:layout_below="@id/videoPreview"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>

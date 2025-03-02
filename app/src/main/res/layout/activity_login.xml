@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.auth.LoginActivity">
+
+    <!-- res/layout/activity_login.xml -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:gravity="center">
+
+        <!-- App Logo or Title -->
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@mipmap/icon_foreground"
+            android:contentDescription="@string/app_logo"
+            android:layout_marginBottom="80dp"/>
+
+        <!-- Username Input -->
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="Enter username"
+            android:hint="@string/username"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="text"/>
+
+        <!-- Password Input -->
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="Enter Password"
+            android:hint="@string/password"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="32dp"
+            android:inputType="textPassword"/>
+
+        <!-- Login Button -->
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/log_in"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/sky_blue"
+            android:textSize="16sp"/>
+
+        <!-- Forgot Password and Sign Up Links -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/forgot_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/forgot_password"
+                android:textColor="@color/sky_blue"
+                android:textSize="14sp"
+                android:layout_marginEnd="16dp"/>
+
+            <TextView
+                android:id="@+id/sign_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_up"
+                android:textColor="@color/sky_blue"
+                android:textSize="14sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

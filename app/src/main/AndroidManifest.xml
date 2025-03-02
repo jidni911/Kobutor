@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Kobutor"
+        tools:targetApi="31">
+        <activity
+            android:name=".activities.additional.AddStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.additional.ViewStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.additional.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.additional.MediaPreviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.additional.StatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.additional.CallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.userandsettings.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.userandsettings.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.messaging.GroupChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.messaging.NewChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.messaging.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.messaging.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.auth.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.auth.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.auth.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

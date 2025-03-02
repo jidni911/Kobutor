@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="sky_blue">#00BFFF</color>
+
+<!-- Light Theme Colors -->
+<color name="colorPrimaryLight">#2196F3</color>
+<color name="colorPrimaryDarkLight">#1976D2</color>
+<color name="colorAccentLight">#FF4081</color>
+
+<!-- Dark Theme Colors -->
+<color name="colorPrimaryDark">#212121</color>
+<color name="colorPrimaryDarkDark">#121212</color>
+<color name="colorAccentDark">#FF4081</color>
+</resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Video View for Video Call (Hidden initially) -->
+    <VideoView
+        android:id="@+id/videoCallView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_centerInParent="true" />
+
+    <!-- Placeholder for Voice Call Screen -->
+    <TextView
+        android:id="@+id/voiceCallPlaceholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voice Call"
+        android:textSize="24sp"
+        android:layout_centerInParent="true" />
+
+    <!-- Switch to Video Button (Optional for switching between voice and video) -->
+    <Button
+        android:id="@+id/btnSwitchToVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch to Video"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp" />
+
+    <!-- End Call Button -->
+    <Button
+        android:id="@+id/btnEndCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End Call"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp" />
+</RelativeLayout>
