@@ -48,6 +48,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.volley)
     implementation(libs.glide)
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 }

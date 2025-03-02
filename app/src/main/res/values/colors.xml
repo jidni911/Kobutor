@@ -4,14 +4,19 @@
     <color name="white">#FFFFFFFF</color>
     <color name="sky_blue">#00BFFF</color>
 
-    <color name="primary" color="@color/colorPrimary" />
+    <color name="colorPrimary">#7aa9be</color> <!-- Change to your desired color -->
+    <color name="colorAccent">#668c9f</color>
+
+    <color name="primary" color="@color/colorPrimaryLight" />
     <!-- Light Theme Colors -->
-    <color name="colorPrimaryLight">#2196F3</color>
-    <color name="colorPrimaryDarkLight">#1976D2</color>
-    <color name="colorAccentLight">#FF4081</color>
+    <color name="colorPrimaryLight">#7aa9be</color>
+    <color name="colorSecondaryLight">#658b9b</color>
+    <color name="colorPrimaryDarkLight">#042347</color>
+    <color name="colorAccentLight">#668c9f</color>
 
     <!-- Dark Theme Colors -->
-    <color name="colorPrimaryDark">#212121</color>
-    <color name="colorPrimaryDarkDark">#121212</color>
-    <color name="colorAccentDark">#FF4081</color>
+    <color name="colorPrimaryDark">#7aa9be</color>
+    <color name="colorSecondaryDark">#658b9b</color>
+    <color name="colorPrimaryDarkDark">#042347</color>
+    <color name="colorAccentDark">#668c9f</color>
 </resources>

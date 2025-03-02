@@ -1,6 +1,7 @@
 package com.jidnivai.kobutor;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.activity.EdgeToEdge;
@@ -63,6 +64,22 @@ public class MainActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(v -> openActivity(SearchActivity.class));
         btnStatus.setOnClickListener(v -> openActivity(StatusActivity.class));
         btnViewStatus.setOnClickListener(v -> openActivity(ViewStatusActivity.class));
+
+        SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        if (isLoggedIn) {
+            openActivity(HomeActivity.class);
+        } else {
+            openActivity(LoginActivity.class);
+        }
+
+//        try {
+//            Thread.sleep(1000);
+//            btnHome.performClick();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        btnLogin.performClick();
     }
 
     private void openActivity(Class<?> activityClass) {

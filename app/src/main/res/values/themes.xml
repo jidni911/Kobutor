@@ -1,9 +1,27 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Kobutor" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+
+        <!-- Navigation bar color -->
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
-    <style name="Theme.Kobutor" parent="Base.Theme.Kobutor" />
+    <style name="Theme.Kobutor" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+
+        <!-- Navigation bar color -->
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+    </style>
 </resources>

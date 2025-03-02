@@ -10,11 +10,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title="@string/recent_chats"
-        android:background="@color/icon_background"
+        android:background="@color/colorAccentLight"
         android:theme="@style/Theme.AppCompat.DayNight"
         app:titleTextColor="@color/white"
-        app:navigationIcon="@drawable/baseline_arrow_back_24"
+        app:navigationIcon="@mipmap/ic_launcher_foreground"
         />
 
     <!-- Recent Chats RecyclerView -->
@@ -23,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp"
+        android:padding="6dp"
         android:scrollbars="vertical" />
 
     <!-- FloatingActionButton to start a new chat -->
@@ -33,7 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:src="@drawable/baseline_add_24"
-        android:contentDescription="Start New Chat"
+        android:contentDescription="@string/start_new_chat"
+        android:backgroundTint="@color/colorPrimaryDark"
+
         android:layout_margin="16dp" />
 
 

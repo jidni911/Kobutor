@@ -1,6 +1,8 @@
 package com.jidnivai.kobutor.activities.auth;
 
 // RegisterActivity.java
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -9,9 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jidnivai.kobutor.R;
+import com.jidnivai.kobutor.service.AuthService;
 
 import java.util.regex.Pattern;
 
@@ -22,9 +27,12 @@ public class RegisterActivity extends AppCompatActivity {
     private RadioGroup radioGroupGender;
     private Button btnRegister;
 
+    AuthService authService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        authService = new AuthService(this);
         setContentView(R.layout.activity_register);
 
         // Initialize UI elements
@@ -107,6 +115,20 @@ public class RegisterActivity extends AppCompatActivity {
         // Hide error message on successful validation
         tvErrorMessage.setVisibility(View.GONE);
 
+        authService.signup(fullName, username, email, password, retypePassword, gender, dob, phoneNumber, address,
+                m -> {
+                    Toast.makeText(this, m, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.putExtra("username", username);
+                    intent.putExtra("password", password);
+                    startActivity(intent);
+                    finish();
+                },
+                m -> {
+                    tvErrorMessage.setVisibility(View.VISIBLE);
+                    tvErrorMessage.setText(m);
+                }
+        );
         // Handle successful registration (e.g., call backend API)
         showRegistrationSuccess();
     }
@@ -129,7 +151,6 @@ public class RegisterActivity extends AppCompatActivity {
             return "";
         }
     }
-
 
 
     private void showRegistrationSuccess() {
