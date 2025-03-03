@@ -24,4 +24,13 @@
         <!-- Navigation bar color -->
         <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
+
+    <style name="Theme.Kobutor.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Kobutor.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Kobutor.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

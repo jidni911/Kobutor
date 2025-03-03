@@ -16,6 +16,7 @@ import com.jidnivai.kobutor.activities.messaging.HomeActivity;
 import com.jidnivai.kobutor.service.AuthService;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         forgotPasswordTextView = findViewById(R.id.forgot_password);
         signUpTextView = findViewById(R.id.sign_up);
-
+        boolean isSet = false;
         Intent i = getIntent();
         if (i != null) {
             // Get the username and password from the intent
@@ -52,7 +53,15 @@ public class LoginActivity extends AppCompatActivity {
                 // Set the username and password in the EditText fields
                 usernameEditText.setText(username);
                 passwordEditText.setText(password);
+                isSet = true;
             }
+        }
+        if(!isSet){
+            SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
+            String username = sharedPreferences.getString("login_username", "");
+            String password = sharedPreferences.getString("login_password", "");
+            usernameEditText.setText(username);
+            passwordEditText.setText(password);
         }
 
 
@@ -98,20 +107,25 @@ public class LoginActivity extends AppCompatActivity {
             //TODO save token to shared preferences
             SharedPreferences.Editor editor = getSharedPreferences("kobutor", MODE_PRIVATE).edit();
             try {
-                editor.putString("token", object.getString("token"));
-                editor.putString("username", object.getString("username"));
-                editor.putString("fullName", object.getString("fullName"));
-                editor.putString("email", object.getString("email"));
-                editor.putString("gender", object.getString("gender"));
-                editor.putString("dob", object.getString("dob"));
-                editor.putString("phoneNumber", object.getString("phoneNumber"));
-                editor.putString("address", object.getString("address"));
-                editor.putString("roles",object.getString("roles"));
+                editor.putString("login_username",username);
+                editor.putString("login_password", password);
+                JSONObject user = object.getJSONObject("user");
+                editor.putString("token", object.getString("jwtToken"));
+                editor.putString("username", user.getString("username"));
+
+                editor.putString("fullName", user.getString("fullName"));
+                editor.putString("email", user.getString("email"));
+                editor.putString("gender", user.getString("gender"));
+                editor.putString("dob", user.getString("dob"));
+                editor.putString("phoneNumber", user.getString("phoneNumber"));
+                editor.putString("address", user.getString("address"));
+                editor.putString("roles",user.getString("roles"));
 //                editor.putString("profilePicture", object.getString("profilePicture"));
                 editor.putBoolean("isLoggedIn", true);
 
             } catch (JSONException e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
             editor.apply();
 
