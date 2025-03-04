@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
         if (isLoggedIn) {
             openActivity(HomeActivity.class);
         } else {

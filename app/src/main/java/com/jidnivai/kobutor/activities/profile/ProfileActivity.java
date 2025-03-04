@@ -1,23 +1,24 @@
 package com.jidnivai.kobutor.activities.profile;
 
-// ProfileActivity.java
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.jidnivai.kobutor.R;
+import com.jidnivai.kobutor.activities.auth.LoginActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView profileImageView;
-    private EditText nameEditText, emailEditText;
-    private Button updateProfileButton, changeProfilePictureButton;
+    private TextView usernameTextView, statusTextView;
+    private Button changeProfilePictureButton, logoutButton;
 
     private static final int PICK_IMAGE_REQUEST = 1; // For selecting profile picture
 
@@ -28,10 +29,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Initialize views
         profileImageView = findViewById(R.id.profileImageView);
-        nameEditText = findViewById(R.id.nameEditText);
-        emailEditText = findViewById(R.id.emailEditText);
-        updateProfileButton = findViewById(R.id.updateProfileButton);
+        usernameTextView = findViewById(R.id.usernameTextView);
+        statusTextView = findViewById(R.id.statusTextView);
         changeProfilePictureButton = findViewById(R.id.changeProfilePictureButton);
+        logoutButton = findViewById(R.id.logoutButton);
 
         // Simulate loading user profile data (this would be fetched from your backend)
         loadUserProfile();
@@ -39,26 +40,35 @@ public class ProfileActivity extends AppCompatActivity {
         // Set up change profile picture button
         changeProfilePictureButton.setOnClickListener(v -> openGallery());
 
-        // Set up update profile button
-        updateProfileButton.setOnClickListener(v -> updateProfile());
+        // Set up logout button
+        logoutButton.setOnClickListener(v -> {
+            // Clear user session data
+            SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
+            sharedPreferences.edit().clear().apply();
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
     }
 
     private void loadUserProfile() {
         // Here, you'd fetch user profile data from the backend.
         // For demonstration, we set dummy data:
+        SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+
         String profileImageUrl = "https://example.com/path/to/profile-pic.jpg";
-        String fullName = "John Doe";
-        String email = "johndoe@example.com";
+        String status = "Hey there! I'm using WhatsApp.";
 
         // Load profile picture using Glide
-        Glide.with(this)
-                .load(profileImageUrl)
-                .placeholder(R.mipmap.icon)
-                .into(profileImageView);
+//        Glide.with(this)
+//                .load(profileImageUrl)
+//                .placeholder(R.mipmap.icon)
+//                .into(profileImageView);
 
-        // Set name and email
-        nameEditText.setText(fullName);
-        emailEditText.setText(email);
+        // Set username and status
+        usernameTextView.setText(username);
+        statusTextView.setText(status);
     }
 
     private void openGallery() {
@@ -77,18 +87,6 @@ public class ProfileActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(data.getData())
                     .into(profileImageView);
-        }
-    }
-
-    private void updateProfile() {
-        String name = nameEditText.getText().toString().trim();
-        String email = emailEditText.getText().toString().trim();
-
-        if (name.isEmpty() || email.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-        } else {
-            // Update the profile (In reality, send a request to the backend)
-            Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
         }
     }
 }
