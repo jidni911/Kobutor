@@ -127,7 +127,8 @@ public class MessageService {
 
 
 
-    public void loadChat(Chat chat) {
+    public void loadChat(Long chatId, Consumer<Chat> onSuccess, Consumer<VolleyError> onError) {
+
     }
 
 

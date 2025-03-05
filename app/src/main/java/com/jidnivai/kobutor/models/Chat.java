@@ -1,9 +1,10 @@
 package com.jidnivai.kobutor.models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Chat {
+public class Chat implements Serializable {
     private Long id;
     private String name;
     private boolean isGroup = false;

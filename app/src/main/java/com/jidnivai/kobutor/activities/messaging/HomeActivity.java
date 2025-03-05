@@ -132,8 +132,15 @@ public class HomeActivity extends AppCompatActivity {
         messageService.loadAllChats(
                 chats -> {
                     chatList = chats;
-//                    Toast.makeText(this, chats.size(), Toast.LENGTH_SHORT).show();
-                    chatsAdapter.notifyDataSetChanged();
+                    Toast.makeText(this, " Loaded "+ chats.size()+  " chats", Toast.LENGTH_SHORT).show();
+                    chatsAdapter = new ChatsAdapter(chatList, chat -> {
+                        // Navigate to ChatActivity for the selected chat
+                        Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
+                        intent.putExtra("chat", chat);
+                        startActivity(intent);
+                    });
+                    recyclerViewChats.setAdapter(chatsAdapter);
+//                    chatsAdapter.notifyDataSetChanged();
 
                 },
                 error -> {
