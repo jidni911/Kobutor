@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jidnivai.kobutor.R;
 
@@ -27,11 +28,11 @@ public class AuthService {
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 onSuccess::accept
-        ,
+                ,
                 error -> {
                     onError.accept(error.getMessage());
                 }
-        ){
+        ) {
             @Override
             public byte[] getBody() {
                 JSONObject body = new JSONObject();
@@ -84,12 +85,28 @@ public class AuthService {
                 },
                 error -> {
                     onError.accept(error.getMessage());
-                }){
+                }) {
             @Override
             public byte[] getBody() {
                 return body.toString().getBytes();
             }
         };
+        queue.add(request);
+    }
+
+    public void echo(Runnable onSuccess, Runnable onError) {
+        String url = context.getString(R.string.api_url) + "/auth/echo";
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    onSuccess.run();
+                },
+                error -> {
+                    onError.run();
+                }
+        ){};
+
         queue.add(request);
     }
 }

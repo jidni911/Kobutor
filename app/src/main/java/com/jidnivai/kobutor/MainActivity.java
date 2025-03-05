@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +24,7 @@ import com.jidnivai.kobutor.activities.media.MediaPreviewActivity;
 import com.jidnivai.kobutor.activities.search.SearchActivity;
 import com.jidnivai.kobutor.activities.status.StatusActivity;
 import com.jidnivai.kobutor.activities.status.ViewStatusActivity;
+import com.jidnivai.kobutor.service.AuthService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,6 +67,13 @@ public class MainActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(v -> openActivity(SearchActivity.class));
         btnStatus.setOnClickListener(v -> openActivity(StatusActivity.class));
         btnViewStatus.setOnClickListener(v -> openActivity(ViewStatusActivity.class));
+
+        AuthService authService = new AuthService(this);
+        authService.echo(()->{
+            Toast.makeText(this, "Server is alive", Toast.LENGTH_SHORT).show();
+        },()->{
+            Toast.makeText(this, "Server is dead", Toast.LENGTH_SHORT).show();
+        });
 
         SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);

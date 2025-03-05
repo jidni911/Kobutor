@@ -34,8 +34,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
     public void onBindViewHolder(ChatViewHolder holder, int position) {
         Chat chat = chatList.get(position);
         holder.nameTextView.setText(chat.getName());
-        holder.lastMessageTextView.setText(chat.getLastMessage());
-        holder.timeTextView.setText(chat.getTime());
+//        holder.lastMessageTextView.setText(chat.getLastMessage());
+//        holder.timeTextView.setText(chat.getTime());
 
         holder.itemView.setOnClickListener(v -> listener.onChatClick(chat));
     }

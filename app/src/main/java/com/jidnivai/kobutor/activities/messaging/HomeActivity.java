@@ -3,6 +3,7 @@ package com.jidnivai.kobutor.activities.messaging;
 // MainActivity.java
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.jidnivai.kobutor.activities.profile.ProfileActivity;
 import com.jidnivai.kobutor.activities.settings.SettingsActivity;
 import com.jidnivai.kobutor.adapters.ChatsAdapter;
 import com.jidnivai.kobutor.models.Chat;
+import com.jidnivai.kobutor.service.MessageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,18 +118,30 @@ public class HomeActivity extends AppCompatActivity {
 
     private void loadRecentChats() {
         // Simulate loading recent chats from the database or backend
-        chatList.add(new Chat(1, "Ayesha Akter", "Ami tomake onek miss kori! 💕", "10:30 AM"));
-        chatList.add(new Chat(2, "Rupa Islam", "Bhalobasha kono shimana jane na... 🥰", "9:45 AM"));
-        chatList.add(new Chat(3, "Mitu Rahman", "Tumi chara shob kichu shunno lage... 😘", "8:00 AM"));
-        chatList.add(new Chat(4, "Nusrat Jahan", "Tumi jodi pashe thako, shob kichu shundor lage! ❤️", "7:15 AM"));
-        chatList.add(new Chat(5, "Farzana Hossain", "Tumar hasi amake pagol kore dey! 😍", "6:50 AM"));
-        chatList.add(new Chat(6, "Sadia Rahman", "Tumi amar jiboner shobcheye boro opohar! 🎁💖", "5:30 AM"));
-        chatList.add(new Chat(7, "Jannatul Ferdous", "Tomar sathe kotha bollei mon valo hoy... ☺️", "4:45 AM"));
-        chatList.add(new Chat(8, "Sharmin Akter", "Tumi amar shopnogulo'r shotti hoye uthecho! ✨", "3:20 AM"));
-        chatList.add(new Chat(9, "Sultana Akter", "Tumi chara ekdin-o vebe dekhchi na! 💞", "2:00 AM"));
-        chatList.add(new Chat(10, "Maliha Chowdhury", "Tumar chokh gulo akash-er moto sundor! 💙", "1:10 AM"));
+//        chatList.add(new Chat(1, "Ayesha Akter", "Ami tomake onek miss kori! 💕", "10:30 AM"));
+//        chatList.add(new Chat(2, "Rupa Islam", "Bhalobasha kono shimana jane na... 🥰", "9:45 AM"));
+//        chatList.add(new Chat(3, "Mitu Rahman", "Tumi chara shob kichu shunno lage... 😘", "8:00 AM"));
+//        chatList.add(new Chat(4, "Nusrat Jahan", "Tumi jodi pashe thako, shob kichu shundor lage! ❤️", "7:15 AM"));
+//        chatList.add(new Chat(5, "Farzana Hossain", "Tumar hasi amake pagol kore dey! 😍", "6:50 AM"));
+//        chatList.add(new Chat(6, "Sadia Rahman", "Tumi amar jiboner shobcheye boro opohar! 🎁💖", "5:30 AM"));
+//        chatList.add(new Chat(7, "Jannatul Ferdous", "Tomar sathe kotha bollei mon valo hoy... ☺️", "4:45 AM"));
+//        chatList.add(new Chat(8, "Sharmin Akter", "Tumi amar shopnogulo'r shotti hoye uthecho! ✨", "3:20 AM"));
+//        chatList.add(new Chat(9, "Sultana Akter", "Tumi chara ekdin-o vebe dekhchi na! 💞", "2:00 AM"));
+//        chatList.add(new Chat(10, "Maliha Chowdhury", "Tumar chokh gulo akash-er moto sundor! 💙", "1:10 AM"));
+        MessageService messageService = new MessageService(this);
+        messageService.loadAllChats(
+                chats -> {
+                    chatList = chats;
+//                    Toast.makeText(this, chats.size(), Toast.LENGTH_SHORT).show();
+                    chatsAdapter.notifyDataSetChanged();
 
-        chatsAdapter.notifyDataSetChanged();
+                },
+                error -> {
+                    Log.e("Volley Error", error.toString());
+                }
+        );
+
+
     }
 
 

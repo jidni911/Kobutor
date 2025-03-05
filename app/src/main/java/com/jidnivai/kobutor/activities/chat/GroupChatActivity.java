@@ -63,16 +63,16 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private void simulateIncomingMessages() {
         // Simulate receiving messages from different group members
-        messageList.add(new Message("Hello, this is user 1!", "user1", false));
-        messageList.add(new Message("Hi, I'm user 2. How's everyone?", "user2", false));
-        messageList.add(new Message("This is user 3. Ready to chat!", "user3", false));
-        messageList.add(new Message("Hey, user 1! I'm good, thanks!", "user4", true)); // Sent message
+//        messageList.add(new Message("Hello, this is user 1!", "user1", false));
+//        messageList.add(new Message("Hi, I'm user 2. How's everyone?", "user2", false));
+//        messageList.add(new Message("This is user 3. Ready to chat!", "user3", false));
+//        messageList.add(new Message("Hey, user 1! I'm good, thanks!", "user4", true)); // Sent message
         messagesAdapter.notifyDataSetChanged();
     }
 
     private void sendMessage(String messageText) {
         // Add the sent message to the list
-        messageList.add(new Message(messageText, "user4", true));
+//        messageList.add(new Message(messageText, "user4", true));
 
         // Update RecyclerView
         messagesAdapter.notifyItemInserted(messageList.size() - 1);
@@ -83,7 +83,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         // Simulate receiving a response after a short delay
         recyclerViewMessages.postDelayed(() -> {
-            messageList.add(new Message("Got your message!", "user2", false));
+//            messageList.add(new Message("Got your message!", "user2", false));
             messagesAdapter.notifyItemInserted(messageList.size() - 1);
             recyclerViewMessages.scrollToPosition(messageList.size() - 1);
         }, 1000);

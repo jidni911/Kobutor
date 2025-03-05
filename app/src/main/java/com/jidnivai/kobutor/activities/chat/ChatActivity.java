@@ -56,14 +56,14 @@ public class ChatActivity extends AppCompatActivity {
 
     private void simulateIncomingMessages() {
         // Simulate receiving messages from the other user
-        messageList.add(new Message("Hello!", "user", false)); // Incoming message
-        messageList.add(new Message("Hi there! How are you?", "other", true)); // Sent message
+//        messageList.add(new Message("Hello!", "user", false)); // Incoming message
+//        messageList.add(new Message("Hi there! How are you?", "other", true)); // Sent message
         messagesAdapter.notifyDataSetChanged();
     }
 
     private void sendMessage(String messageText) {
         // Add the sent message to the list
-        messageList.add(new Message(messageText, "user", true));
+//        messageList.add(new Message(messageText, "user", true));
 
         // Update RecyclerView
         messagesAdapter.notifyItemInserted(messageList.size() - 1);
@@ -74,7 +74,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // Simulate receiving a response after a short delay
         recyclerViewMessages.postDelayed(() -> {
-            messageList.add(new Message("Got your message!", "other", false));
+//            messageList.add(new Message("Got your message!", "other", false));
             messagesAdapter.notifyItemInserted(messageList.size() - 1);
             recyclerViewMessages.scrollToPosition(messageList.size() - 1);
         }, 1000);
