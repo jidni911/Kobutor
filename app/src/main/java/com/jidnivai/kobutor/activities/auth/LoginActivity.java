@@ -110,7 +110,9 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("login_username",username);
                 editor.putString("login_password", password);
                 JSONObject user = object.getJSONObject("user");
+
                 editor.putString("token", object.getString("jwtToken"));
+                editor.putLong("id", user.getLong("id"));
                 editor.putString("username", user.getString("username"));
 
                 editor.putString("fullName", user.getString("fullName"));

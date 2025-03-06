@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -251,7 +252,7 @@ public class MessageService {
                             chat.setCreatedAt(LocalDateTime.parse(response.getString("createdAt")));
                         }
                         onSuccess.accept(chat);
-                    }  catch (JSONException e) {
+                    } catch (JSONException e) {
                         e.printStackTrace();
                         onError.accept(new VolleyError("JSON Parsing Error", e));
                     }
@@ -269,7 +270,64 @@ public class MessageService {
         Volley.newRequestQueue(context).add(request);
     }
 
-    public void sendMessage(Chat chat, Message message) {
+    public void sendMessage(String message, Long id, Consumer<Message> onSuccess, Consumer<VolleyError> onError) {
+        String url = context.getString(R.string.api_url) + "/messege";
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kobutor", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null); // Adjust key if different
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
+                response -> {
+                    try{
+                        Message newMessage = new Message();
+                        newMessage.setId(response.getLong("id"));
+                        newMessage.setMessage(response.getString("message"));
+                        newMessage.setRead(response.getBoolean("read"));
+                        newMessage.setDeleted(response.getBoolean("deleted"));
+                        newMessage.setSent(response.getBoolean("sent"));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            newMessage.setCreatedAt(LocalDateTime.parse(response.getString("createdAt")));
+                            newMessage.setUpdatedAt(LocalDateTime.parse(response.getString("updatedAt")));
+                        }
+                        JSONObject senderObject = response.getJSONObject("sender");
+                        User sender = new User();
+                        sender.setId(senderObject.getLong("id"));
+                        sender.setUsername(senderObject.getString("username"));
+                        sender.setFullName(senderObject.getString("fullName"));
+                        newMessage.setSender(sender);
+                        onSuccess.accept(newMessage);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        onError.accept(new VolleyError("JSON Parsing Error", e));
+                    }
+                },
+                error -> {
+                    onError.accept(error);
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token); // Add token to header
+                }
+                return headers;
+            }
+
+            @Override
+            public byte[] getBody() {
+
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("messege", message);
+                    jsonObject.put("chatId", id);
+                    return jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return super.getBody();
+            }
+        };
+        Volley.newRequestQueue(context).add(request);
 
     }
 

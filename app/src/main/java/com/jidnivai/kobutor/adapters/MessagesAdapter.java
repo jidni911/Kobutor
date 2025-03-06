@@ -16,9 +16,11 @@ import java.util.List;
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
 
     private List<Message> messageList;
+    private Long currentUserId = -1L;
 
-    public MessagesAdapter(List<Message> messageList) {
+    public MessagesAdapter(List<Message> messageList, Long currentUserId) {
         this.messageList = messageList;
+        this.currentUserId = currentUserId;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     @Override
     public int getItemViewType(int position) {
         // Return 1 if the message is sent by the user (isSent = true), else return 0 (received message)
-        return messageList.get(position).isSent() ? 1 : 0;
+        return messageList.get(position).getSender().getId().equals(currentUserId) ? 0 : 1;
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {

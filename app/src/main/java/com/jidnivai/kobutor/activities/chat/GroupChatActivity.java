@@ -28,6 +28,8 @@ public class GroupChatActivity extends AppCompatActivity {
     private List<Message> messageList = new ArrayList<>();
     private String groupName = "Group Chat";  // You can set this dynamically based on the group
 
+    Long currentUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         // Set up RecyclerView
         recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
-        messagesAdapter = new MessagesAdapter(messageList);
+        messagesAdapter = new MessagesAdapter(messageList, currentUserId);
         recyclerViewMessages.setAdapter(messagesAdapter);
 
         // Simulate incoming messages

@@ -3,6 +3,7 @@ package com.jidnivai.kobutor.activities.chat;
 // ChatActivity.java
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -36,6 +37,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
+    private Long currentUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,9 @@ public class ChatActivity extends AppCompatActivity {
         editTextMessage = findViewById(R.id.editTextMessage);
         btnSend = findViewById(R.id.btnSend);
         toolbar = findViewById(R.id.toolbar);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
+        currentUserId = sharedPreferences.getLong("id", -1);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -62,15 +68,16 @@ public class ChatActivity extends AppCompatActivity {
 
 
         // Simulate receiving a message from the other user
-        simulateIncomingMessages();
+
         MessageService messageService = new MessageService(this);
         messageService.loadChat(chat.getId(),
                 messages -> {
                     messageList = messages;
                     // Set up RecyclerView
                     recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
-                    messagesAdapter = new MessagesAdapter(messageList);
+                    messagesAdapter = new MessagesAdapter(messageList, currentUserId);
                     recyclerViewMessages.setAdapter(messagesAdapter);
+                    recyclerViewMessages.scrollToPosition(messagesAdapter.getItemCount() - 1);
                 },
                 error -> {
                     Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -83,36 +90,28 @@ public class ChatActivity extends AppCompatActivity {
             String messageText = editTextMessage.getText().toString().trim();
 
             if (!TextUtils.isEmpty(messageText)) {
-                sendMessage(messageText);
+                sendMessage(messageText, chat.getId());
             } else {
                 Toast.makeText(ChatActivity.this, "Message cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void simulateIncomingMessages() {
-        // Simulate receiving messages from the other user
-//        messageList.add(new Message("Hello!", "user", false)); // Incoming message
-//        messageList.add(new Message("Hi there! How are you?", "other", true)); // Sent message
-//        messagesAdapter.notifyDataSetChanged();
-    }
 
-    private void sendMessage(String messageText) {
-        // Add the sent message to the list
-//        messageList.add(new Message(messageText, "user", true));
+    private void sendMessage(String messageText, Long id) {
+        MessageService messageService = new MessageService(this);
+        messageService.sendMessage(messageText, id,
+                message -> {
+                    messageList.add(message);
+                    recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
+                    messagesAdapter = new MessagesAdapter(messageList, currentUserId);
+                    recyclerViewMessages.setAdapter(messagesAdapter);
+                    editTextMessage.setText("");//TODO works here
+                    recyclerViewMessages.scrollToPosition(messagesAdapter.getItemCount() - 1);
+                },
+                error -> {
+                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                });
 
-        // Update RecyclerView
-        messagesAdapter.notifyItemInserted(messageList.size() - 1);
-        recyclerViewMessages.scrollToPosition(messageList.size() - 1);
-
-        // Clear the EditText
-        editTextMessage.setText("");
-
-        // Simulate receiving a response after a short delay
-        recyclerViewMessages.postDelayed(() -> {
-//            messageList.add(new Message("Got your message!", "other", false));
-            messagesAdapter.notifyItemInserted(messageList.size() - 1);
-            recyclerViewMessages.scrollToPosition(messageList.size() - 1);
-        }, 1000);
     }
 }
