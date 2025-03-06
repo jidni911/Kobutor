@@ -28,8 +28,9 @@ import java.util.function.Consumer;
 
 public class MessageService {
     Context context;
-    String url ="";
-    public MessageService(Context context){
+    String url = "";
+
+    public MessageService(Context context) {
         this.context = context;
         url = context.getString(R.string.api_url) + "/messege";
     }
@@ -51,7 +52,11 @@ public class MessageService {
                             Chat chat = new Chat();
                             chat.setId(chatObject.getLong("id"));
                             chat.setName(chatObject.getString("name"));
-                            chat.setGroup(chatObject.getBoolean("group"));
+//                            chat.setGroup(chatObject.getBoolean("isGroup"));
+                            chat.setLastMessage(chatObject.getString("lastMessage"));
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                chat.setLastMessageTime(LocalDateTime.parse(chatObject.getString("lastMessageTime")));
+                            }
 
                             if (!chatObject.isNull("groupImage")) {
                                 JSONObject groupImageObj = chatObject.getJSONObject("groupImage");
@@ -111,7 +116,7 @@ public class MessageService {
                     }
                 },
                 error -> onError.accept(error)
-        ){
+        ) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
@@ -120,25 +125,191 @@ public class MessageService {
                 }
                 return headers;
             }
-        };;
+        };
 
         Volley.newRequestQueue(context).add(request);
     }
 
 
+    public void loadChat(Long chatId, Consumer<List<Message>> onSuccess, Consumer<VolleyError> onError) {
+        String url = context.getString(R.string.api_url) + "/messege/chat/" + chatId;
 
-    public void loadChat(Long chatId, Consumer<Chat> onSuccess, Consumer<VolleyError> onError) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kobutor", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null); // Adjust key if different
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        JSONArray messagesArray = response.getJSONArray("content");
+                        List<Message> messages = new ArrayList<>();
+                        for (int i = 0; i < messagesArray.length(); i++) {
+                            JSONObject messageObject = messagesArray.getJSONObject(i);
+                            Message message = new Message();
+                            message.setId(messageObject.getLong("id"));
+                            message.setMessage(messageObject.getString("message"));
+                            message.setRead(messageObject.getBoolean("read"));
+                            message.setDeleted(messageObject.getBoolean("deleted"));
+                            message.setSent(messageObject.getBoolean("sent"));
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                message.setCreatedAt(LocalDateTime.parse(messageObject.getString("createdAt")));
+                                message.setUpdatedAt(LocalDateTime.parse(messageObject.getString("updatedAt")));
+                            }
+                            JSONObject senderObject = messageObject.getJSONObject("sender");
+                            User sender = new User();
+                            sender.setId(senderObject.getLong("id"));
+                            sender.setUsername(senderObject.getString("username"));
+                            sender.setFullName(senderObject.getString("fullName"));
+                            message.setSender(sender);
+                            messages.add(message);
+                        }
+                        onSuccess.accept(messages);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        onError.accept(new VolleyError("JSON Parsing Error", e));
+                    }
+                },
+                error -> onError.accept(error)
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token); // Add token to header
+                }
+                return headers;
+            }
+        };
+        Volley.newRequestQueue(context).add(request);
 
     }
 
 
-    public void createChat(List<User> users){
+    public void createChat(String name, long id, Consumer<Chat> onSuccess, Consumer<VolleyError> onError) {
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kobutor", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null);
+
+        String api = context.getString(R.string.api_url) + "/messege/newChat?name=" + name + "&ids=" + id;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, api, null,
+                response -> {
+                    try {
+                        Chat chat = new Chat();
+                        chat.setId(response.getLong("id"));
+                        chat.setName(response.getString("name"));
+//                            chat.setGroup(chatObject.getBoolean("isGroup"));
+                        chat.setLastMessage(response.getString("lastMessage"));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            chat.setLastMessageTime(LocalDateTime.parse(response.getString("lastMessageTime")));
+                        }
+
+                        if (!response.isNull("groupImage")) {
+                            JSONObject groupImageObj = response.getJSONObject("groupImage");
+                            Image groupImage = new Image(); // Assuming an Image class exists
+                            groupImage.setId(groupImageObj.getLong("id"));
+                            groupImage.setUrl(groupImageObj.getString("url")); // Adjust field names accordingly
+                            chat.setGroupImage(groupImage);
+                        }
+
+                        // Parse members list
+                        JSONArray membersArray = response.getJSONArray("members");
+                        List<User> members = new ArrayList<>();
+                        for (int j = 0; j < membersArray.length(); j++) {
+                            JSONObject userObj = membersArray.getJSONObject(j);
+                            User user = new User();
+                            user.setId(userObj.getLong("id"));
+                            user.setUsername(userObj.getString("username"));
+                            user.setFullName(userObj.getString("fullName"));
+                            members.add(user);
+                        }
+                        chat.setMembers(members);
+
+                        // Parse requestedMembers list
+                        JSONArray requestedMembersArray = response.getJSONArray("requestedMembers");
+                        List<User> requestedMembers = new ArrayList<>();
+                        for (int j = 0; j < requestedMembersArray.length(); j++) {
+                            JSONObject userObj = requestedMembersArray.getJSONObject(j);
+                            User user = new User();
+                            user.setId(userObj.getLong("id"));
+                            user.setUsername(userObj.getString("username"));
+                            user.setFullName(userObj.getString("fullName"));
+                            requestedMembers.add(user);
+                        }
+                        chat.setRequestedMembers(requestedMembers);
+
+                        // Parse creator
+                        if (!response.isNull("creator")) {
+                            JSONObject creatorObj = response.getJSONObject("creator");
+                            User creator = new User();
+                            creator.setId(creatorObj.getLong("id"));
+                            creator.setUsername(creatorObj.getString("username"));
+                            chat.setCreator(creator);
+                        }
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            chat.setUpdatedAt(LocalDateTime.parse(response.getString("updatedAt"))); // Convert if necessary
+                            chat.setCreatedAt(LocalDateTime.parse(response.getString("createdAt")));
+                        }
+                        onSuccess.accept(chat);
+                    }  catch (JSONException e) {
+                        e.printStackTrace();
+                        onError.accept(new VolleyError("JSON Parsing Error", e));
+                    }
+                },
+                error -> onError.accept(error)) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token); // Add token to header
+                }
+                return headers;
+            }
+        };
+        Volley.newRequestQueue(context).add(request);
+    }
+
+    public void sendMessage(Chat chat, Message message) {
 
     }
 
-    public void sendMessage(Chat chat, Message message){
+    public void searchContact(String query, Consumer<List<User>> onSuccess, Consumer<VolleyError> onError) {
+        String url = context.getString(R.string.api_url) + "/messege/newChatSuggestions/" + query;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kobutor", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null); // Adjust key if different
 
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        JSONArray usersArray = response.getJSONArray("content");
+                        List<User> users = new ArrayList<>();
+                        for (int i = 0; i < usersArray.length(); i++) {
+                            User user = new User();
+                            JSONObject userObject = usersArray.getJSONObject(i);
+                            user.setId(userObject.getLong("id"));
+                            user.setUsername(userObject.getString("username"));
+                            user.setFullName(userObject.getString("fullName"));
+                            user.setEmail(userObject.getString("email"));
+                            users.add(user);
+                        }
+                        onSuccess.accept(users);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        onError.accept(new VolleyError("JSON Parsing Error", e));
+                    }
+                },
+                error -> onError.accept(error)) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token); // Add token to header
+                }
+                return headers;
+            }
+        };
+        Volley.newRequestQueue(context).add(request);
     }
-
-
 }
+
+

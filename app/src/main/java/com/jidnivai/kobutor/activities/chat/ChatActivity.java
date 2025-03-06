@@ -1,12 +1,14 @@
 package com.jidnivai.kobutor.activities.chat;
 
 // ChatActivity.java
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        Chat chat = getIntent().getParcelableExtra("chat");
+        Chat chat = (Chat) getIntent().getSerializableExtra("chat");
 
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         editTextMessage = findViewById(R.id.editTextMessage);
@@ -50,18 +52,30 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(v -> startActivity(new Intent(ChatActivity.this, ProfileActivity.class)));
-        toolbar.setTitle(chat.getName());
-
-        // Set up RecyclerView
-        recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
-        messagesAdapter = new MessagesAdapter(messageList);
-        recyclerViewMessages.setAdapter(messagesAdapter);
-
+        toolbar.post(() -> {
+            if (chat != null && chat.getName() != null) {
+                toolbar.setTitle(chat.getName());
+            } else {
+                toolbar.setTitle("Chat");
+            }
+        });
 
 
         // Simulate receiving a message from the other user
         simulateIncomingMessages();
         MessageService messageService = new MessageService(this);
+        messageService.loadChat(chat.getId(),
+                messages -> {
+                    messageList = messages;
+                    // Set up RecyclerView
+                    recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
+                    messagesAdapter = new MessagesAdapter(messageList);
+                    recyclerViewMessages.setAdapter(messagesAdapter);
+                },
+                error -> {
+                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+        );
 
 
         // Handle the send button click
@@ -80,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
         // Simulate receiving messages from the other user
 //        messageList.add(new Message("Hello!", "user", false)); // Incoming message
 //        messageList.add(new Message("Hi there! How are you?", "other", true)); // Sent message
-        messagesAdapter.notifyDataSetChanged();
+//        messagesAdapter.notifyDataSetChanged();
     }
 
     private void sendMessage(String messageText) {

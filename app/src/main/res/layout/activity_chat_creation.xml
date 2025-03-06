@@ -12,32 +12,29 @@
         android:layout_marginBottom="16dp"
         android:background="@color/colorPrimaryDark"
         android:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
-        android:subtitle="find friends and chat with them"
-        android:title="@string/new_chat"
+        android:subtitle="creating a chat"
+        android:title="Confirmation"
         android:titleTextColor="@android:color/white"/>
 
-
-    <!-- SearchView to search for contacts -->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchViewContacts"
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/chatName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:iconifiedByDefault="false"
-        android:queryHint="Search contacts" />
-
-    <!-- RecyclerView to display contact list -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewContacts"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_weight="1" />
+        android:hint="Chat name"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/info"/>
+
+
 
     <!-- Button to start a new group chat (optional) -->
     <Button
-        android:id="@+id/buttonCreateGroup"
+        android:id="@+id/createChat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/create_group_chat" />
+        android:text="Create Chat" />
 </LinearLayout>

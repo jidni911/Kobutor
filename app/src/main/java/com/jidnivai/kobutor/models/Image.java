@@ -1,6 +1,8 @@
 package com.jidnivai.kobutor.models;
 
-public class Image {
+import java.io.Serializable;
+
+public class Image implements Serializable {
 
     private Long id;
 

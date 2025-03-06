@@ -12,22 +12,13 @@ public class Chat implements Serializable {
     private List<User> requestedMembers;  // Added this field
     private List<User> members;
     private User creator;
+
+    private String lastMessage;
+    private LocalDateTime lastMessageTime;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public Chat() {}
-
-    public Chat(Long id, String name, boolean isGroup, Image groupImage, List<User> requestedMembers, List<User> members, User creator, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.isGroup = isGroup;
-        this.groupImage = groupImage;
-        this.requestedMembers = requestedMembers;
-        this.members = members;
-        this.creator = creator;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -56,4 +47,20 @@ public class Chat implements Serializable {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public LocalDateTime getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(LocalDateTime lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
+    }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -14,43 +15,41 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jidnivai.kobutor.R;
 import com.jidnivai.kobutor.adapters.ContactsAdapter;
-import com.jidnivai.kobutor.models.Contact;
+import com.jidnivai.kobutor.models.User;
+import com.jidnivai.kobutor.service.MessageService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NewChatActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewContacts;
     private ContactsAdapter contactsAdapter;
-    private List<Contact> contactList = new ArrayList<>();
+    private List<User> contactList = new ArrayList<>();
     private Button buttonCreateGroup;
     private SearchView searchViewContacts;
+
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_chat);
 
+        // Binding
         recyclerViewContacts = findViewById(R.id.recyclerViewContacts);
         buttonCreateGroup = findViewById(R.id.buttonCreateGroup);
         searchViewContacts = findViewById(R.id.searchViewContacts);
+        toolbar = findViewById(R.id.toolbar);
 
-        // Set up RecyclerView
-        recyclerViewContacts.setLayoutManager(new LinearLayoutManager(this));
-        contactsAdapter = new ContactsAdapter(contactList, new ContactsAdapter.OnContactClickListener() {
-            @Override
-            public void onContactClick(Contact contact) {
-                // Navigate to ChatActivity with the selected contact
-                Intent intent = new Intent(NewChatActivity.this, ChatActivity.class);
-                intent.putExtra("contactId", contact.getId());
-                startActivity(intent);
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            this.finish();
         });
-        recyclerViewContacts.setAdapter(contactsAdapter);
+
 
         // Simulate loading contacts
-        loadContacts();
+//        loadContacts();
 
         // Handle the "Create Group Chat" button click
         buttonCreateGroup.setOnClickListener(v -> {
@@ -68,19 +67,39 @@ public class NewChatActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 // Call getFilter to filter the contact list
-                contactsAdapter.getFilter().filter(newText);
+                if(!Objects.equals(newText, "")) {
+                    loadContacts(newText);
+                }
                 return false;
             }
         });
 
     }
 
-    private void loadContacts() {
+    private void loadContacts(String query) {
         // Simulate loading contacts from the backend or database
-        contactList.add(new Contact(1, "John Doe"));
-        contactList.add(new Contact(2, "Jane Smith"));
-        contactList.add(new Contact(3, "Mike Johnson"));
-        contactList.add(new Contact(4, "Emily Davis"));
-        contactsAdapter.notifyDataSetChanged();
+        MessageService messageService = new MessageService(this);
+        messageService.searchContact(query,
+                users -> {
+                    contactList = users;
+
+                    // Set up RecyclerView
+                    recyclerViewContacts.setLayoutManager(new LinearLayoutManager(this));
+                    contactsAdapter = new ContactsAdapter(contactList, contact -> {
+                        // Navigate to ChatActivity with the selected contact
+                        Intent intent = new Intent(NewChatActivity.this, ChatCreationActivity.class);
+                        intent.putExtra("userId", contact.getId());
+                        intent.putExtra("fullName", contact.getFullName());
+                        intent.putExtra("email", contact.getEmail());
+                        startActivity(intent);
+                    });
+                    recyclerViewContacts.setAdapter(contactsAdapter);
+                    contactsAdapter.notifyDataSetChanged();
+
+                },
+                error -> {
+                    error.printStackTrace();
+                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

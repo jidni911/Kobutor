@@ -1,10 +1,11 @@
 package com.jidnivai.kobutor.models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-public class User {
+public class User implements Serializable {
     private Long id;
     private String fullName;
     private String username;

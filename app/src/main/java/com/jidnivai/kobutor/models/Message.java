@@ -9,7 +9,6 @@ public class Message {
 
     private String message;
     private User sender;
-    private User receiver;
     private boolean isRead = false;
 
     private boolean isDeleted = false;
@@ -22,17 +21,7 @@ public class Message {
     public Message() {
     }
 
-    public Message(Long id, String message, User sender, User receiver, boolean isRead, boolean isDeleted, boolean isSent, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.message = message;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.isRead = isRead;
-        this.isDeleted = isDeleted;
-        this.isSent = isSent;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
+
 
     public Long getId() {
         return id;
@@ -58,13 +47,6 @@ public class Message {
         this.sender = sender;
     }
 
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
-    }
 
     public boolean isRead() {
         return isRead;
@@ -105,4 +87,6 @@ public class Message {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+
 }
