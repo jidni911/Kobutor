@@ -1,8 +1,11 @@
 package com.jidnivai.kobutor.activities.messaging;
 
 // MainActivity.java
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,15 +31,27 @@ import com.jidnivai.kobutor.service.MessageService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HomeActivity extends AppCompatActivity {
 
     RecyclerView recyclerViewChats;
     ChatsAdapter chatsAdapter;
     List<Chat> chatList = new ArrayList<>();
+    List<Chat> oldChatList = new ArrayList<>();
     FloatingActionButton fabNewChat;
 
     Toolbar toolbar;
+
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable refreshChatsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            loadRecentChats();
+            handler.postDelayed(this, 2000); // Repeat after 2 seconds
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +65,17 @@ public class HomeActivity extends AppCompatActivity {
 
         // Set up RecyclerView
         recyclerViewChats.setLayoutManager(new LinearLayoutManager(this));
-        chatsAdapter = new ChatsAdapter(chatList, chat -> {
-            // Navigate to ChatActivity for the selected chat
-            Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
-            intent.putExtra("chatId", chat.getId());
-            startActivity(intent);
-        });
-        recyclerViewChats.setAdapter(chatsAdapter);
+//        chatsAdapter = new ChatsAdapter(chatList, chat -> {
+//            // Navigate to ChatActivity for the selected chat
+//            Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
+//            intent.putExtra("chatId", chat.getId());
+//            startActivity(intent);
+//        });
+//        recyclerViewChats.setAdapter(chatsAdapter);
 
         // Simulate loading some recent chats
         loadRecentChats();
+        handler.post(refreshChatsRunnable);
 
 
         // Handle FAB click to start a new chat
@@ -67,6 +83,12 @@ public class HomeActivity extends AppCompatActivity {
             // Open NewChatActivity or GroupChatActivity
             Intent intent = new Intent(HomeActivity.this, NewChatActivity.class);
             startActivity(intent);
+        });
+        fabNewChat.setLongClickable(true);
+        fabNewChat.setOnLongClickListener(v -> {
+            Toast.makeText(this, "Refreshing", Toast.LENGTH_SHORT).show();
+            loadRecentChats();
+            return true;
         });
 //        toolbar.setTitle("Recent Chats");
         setSupportActionBar(toolbar);
@@ -76,7 +98,12 @@ public class HomeActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> startActivity(new Intent(HomeActivity.this, ProfileActivity.class)));
         //TODO work with tool bar
 
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(refreshChatsRunnable); // Stop the interval when activity is destroyed
     }
 
     @Override
@@ -117,23 +144,17 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadRecentChats() {
-        // Simulate loading recent chats from the database or backend
-//        chatList.add(new Chat(1, "Ayesha Akter", "Ami tomake onek miss kori! 💕", "10:30 AM"));
-//        chatList.add(new Chat(2, "Rupa Islam", "Bhalobasha kono shimana jane na... 🥰", "9:45 AM"));
-//        chatList.add(new Chat(3, "Mitu Rahman", "Tumi chara shob kichu shunno lage... 😘", "8:00 AM"));
-//        chatList.add(new Chat(4, "Nusrat Jahan", "Tumi jodi pashe thako, shob kichu shundor lage! ❤️", "7:15 AM"));
-//        chatList.add(new Chat(5, "Farzana Hossain", "Tumar hasi amake pagol kore dey! 😍", "6:50 AM"));
-//        chatList.add(new Chat(6, "Sadia Rahman", "Tumi amar jiboner shobcheye boro opohar! 🎁💖", "5:30 AM"));
-//        chatList.add(new Chat(7, "Jannatul Ferdous", "Tomar sathe kotha bollei mon valo hoy... ☺️", "4:45 AM"));
-//        chatList.add(new Chat(8, "Sharmin Akter", "Tumi amar shopnogulo'r shotti hoye uthecho! ✨", "3:20 AM"));
-//        chatList.add(new Chat(9, "Sultana Akter", "Tumi chara ekdin-o vebe dekhchi na! 💞", "2:00 AM"));
-//        chatList.add(new Chat(10, "Maliha Chowdhury", "Tumar chokh gulo akash-er moto sundor! 💙", "1:10 AM"));
         MessageService messageService = new MessageService(this);
         messageService.loadAllChats(
                 chats -> {
                     chatList = chats;
-                    Toast.makeText(this, " Loaded "+ chats.size()+  " chats", Toast.LENGTH_SHORT).show();
-                    chatsAdapter = new ChatsAdapter(chatList, chat -> {
+                    if(oldChatList.isEmpty()){
+                        oldChatList = chats;
+                    }
+                    chatsAdapter = new ChatsAdapter(chatList,oldChatList, chat -> {
+
+                        oldChatList = oldChatList.stream().filter(c-> !c.getId().equals(chat.getId())).collect(Collectors.toCollection(ArrayList::new));
+                        oldChatList.add(chat);
                         // Navigate to ChatActivity for the selected chat
                         Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
                         intent.putExtra("chat", chat);
@@ -150,7 +171,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
-
 
 
 }

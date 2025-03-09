@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (isLoggedIn) {
             openActivity(HomeActivity.class);
+//            openActivity(WebSocketActivity.class);
         } else {
             openActivity(LoginActivity.class);
         }

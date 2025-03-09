@@ -58,6 +58,7 @@ public class MessageService {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 chat.setLastMessageTime(LocalDateTime.parse(chatObject.getString("lastMessageTime")));
                             }
+                            chat.setMessegeCount(chatObject.getInt("messegeCount"));
 
                             if (!chatObject.isNull("groupImage")) {
                                 JSONObject groupImageObj = chatObject.getJSONObject("groupImage");

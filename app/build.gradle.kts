@@ -58,4 +58,5 @@ dependencies {
     implementation(libs.volley)
     implementation(libs.glide)
     kapt("com.github.bumptech.glide:compiler:4.16.0")
+    implementation(libs.okhttp)
 }

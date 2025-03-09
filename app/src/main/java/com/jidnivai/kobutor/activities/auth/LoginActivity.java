@@ -79,6 +79,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        loginButton.setLongClickable(true);
+        loginButton.setOnLongClickListener(v -> {
+            usernameEditText.setText("jidni");
+            passwordEditText.setText("Onetwothree12@");
+            return true;
+        });
+
         // Set onClickListeners for "Forgot Password" and "Sign Up" links
         forgotPasswordTextView.setOnClickListener(v -> {
             // Navigate to Forgot Password Activity

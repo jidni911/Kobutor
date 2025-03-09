@@ -5,6 +5,8 @@ package com.jidnivai.kobutor.activities.chat;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,10 +41,22 @@ public class ChatActivity extends AppCompatActivity {
 
     private Long currentUserId;
 
+    private Long chatId;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable refreshChatsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            loadMessages();
+            handler.postDelayed(this, 2000); // Repeat after 2 seconds
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
         Chat chat = (Chat) getIntent().getSerializableExtra("chat");
 
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
@@ -58,39 +72,29 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(v -> startActivity(new Intent(ChatActivity.this, ProfileActivity.class)));
-        toolbar.post(() -> {
-            if (chat != null && chat.getName() != null) {
-                toolbar.setTitle(chat.getName());
-            } else {
-                toolbar.setTitle("Chat");
-            }
-        });
 
+        if (chat != null && chat.getName() != null) {
+            toolbar.setTitle(chat.getName());
+            chatId = chat.getId();
+        } else {
+            toolbar.setTitle("Chat");
+        }
 
-        // Simulate receiving a message from the other user
+        // Initialize RecyclerView once
+        messagesAdapter = new MessagesAdapter(messageList, currentUserId);
+        recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewMessages.setAdapter(messagesAdapter);
 
-        MessageService messageService = new MessageService(this);
-        messageService.loadChat(chat.getId(),
-                messages -> {
-                    messageList = messages;
-                    // Set up RecyclerView
-                    recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
-                    messagesAdapter = new MessagesAdapter(messageList, currentUserId);
-                    recyclerViewMessages.setAdapter(messagesAdapter);
-                    recyclerViewMessages.scrollToPosition(messagesAdapter.getItemCount() - 1);
-                },
-                error -> {
-                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-        );
+        if (chatId != null) {
+            loadMessages();
+            handler.post(refreshChatsRunnable);
+        }
 
-
-        // Handle the send button click
+        // Handle Send Button Click
         btnSend.setOnClickListener(v -> {
             String messageText = editTextMessage.getText().toString().trim();
-
             if (!TextUtils.isEmpty(messageText)) {
-                sendMessage(messageText, chat.getId());
+                sendMessage(messageText, chatId);
             } else {
                 Toast.makeText(ChatActivity.this, "Message cannot be empty", Toast.LENGTH_SHORT).show();
             }
@@ -98,20 +102,62 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void sendMessage(String messageText, Long id) {
+
+    private void sendMessage(String messageText, Long chatId) {
         MessageService messageService = new MessageService(this);
-        messageService.sendMessage(messageText, id,
+        messageService.sendMessage(messageText, chatId,
                 message -> {
                     messageList.add(message);
-                    recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
-                    messagesAdapter = new MessagesAdapter(messageList, currentUserId);
-                    recyclerViewMessages.setAdapter(messagesAdapter);
-                    editTextMessage.setText("");//TODO works here
-                    recyclerViewMessages.scrollToPosition(messagesAdapter.getItemCount() - 1);
-                },
-                error -> {
-                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                    messagesAdapter.notifyItemInserted(messageList.size() - 1);
+                    editTextMessage.setText("");
 
+                    // Scroll only if user is at the bottom
+                    if (!recyclerViewMessages.canScrollVertically(1)) {
+                        recyclerViewMessages.scrollToPosition(messagesAdapter.getItemCount() - 1);
+                    }
+                },
+                error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show()
+        );
+    }
+
+
+    private void loadMessages() {
+        MessageService messageService = new MessageService(this);
+        messageService.loadChat(chatId,
+                messages -> {
+                    if (messages.isEmpty()) return;
+
+                    // Check if the last message has changed
+                    boolean isNewMessage = messageList.isEmpty() ||
+                            !messages.get(messages.size() - 1).getId().equals(
+                                    messageList.get(messageList.size() - 1).getId());
+
+                    if (isNewMessage) {
+                        messageList.clear();
+                        messageList.addAll(messages);
+                        messagesAdapter.notifyDataSetChanged();
+
+                        // Check if the user is near the bottom before scrolling
+                        int scrollPosition = recyclerViewMessages.computeVerticalScrollOffset();
+                        int totalHeight = recyclerViewMessages.computeVerticalScrollRange();
+                        int screenHeight = recyclerViewMessages.getHeight();
+
+                        boolean isNearBottom = (scrollPosition + screenHeight) >= (totalHeight - 300); // 300px threshold
+
+                        if (isNearBottom) {
+                            recyclerViewMessages.scrollToPosition(messagesAdapter.getItemCount() - 1);
+                        }
+                    }
+                },
+                error -> Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show()
+        );
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(refreshChatsRunnable); // Stop the interval when activity is destroyed
     }
 }

@@ -15,6 +15,7 @@ public class Chat implements Serializable {
 
     private String lastMessage;
     private LocalDateTime lastMessageTime;
+    private int messegeCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -62,5 +63,13 @@ public class Chat implements Serializable {
 
     public void setLastMessageTime(LocalDateTime lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
+    }
+
+    public int getMessegeCount() {
+        return messegeCount;
+    }
+
+    public void setMessegeCount(int messegeCount) {
+        this.messegeCount = messegeCount;
     }
 }

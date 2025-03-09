@@ -16,10 +16,12 @@ import java.util.List;
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHolder> {
 
     List<Chat> chatList;
+    List<Chat> oldChatList;
     OnChatClickListener listener;
 
-    public ChatsAdapter(List<Chat> chatList, OnChatClickListener listener) {
+    public ChatsAdapter(List<Chat> chatList,List<Chat> oldChatList, OnChatClickListener listener) {
         this.chatList = chatList;
+        this.oldChatList = oldChatList;
         this.listener = listener;
     }
 
@@ -33,13 +35,20 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
     @Override
     public void onBindViewHolder(ChatViewHolder holder, int position) {
         Chat chat = chatList.get(position);
+        Chat oldChat = oldChatList.stream().filter(c -> c.getId().equals(chat.getId())).findFirst().orElse(null);
         holder.nameTextView.setText(chat.getName());
         holder.lastMessageTextView.setText(chat.getLastMessage());
         holder.timeTextView.setText(chat.getLastMessageTime().toString());
-        holder.textViewUnread.setText("1");
+        if(chat.getMessegeCount()-oldChat.getMessegeCount()==0){
+            holder.textViewUnread.setVisibility(View.INVISIBLE);
+        }
+        holder.textViewUnread.setText(chat.getMessegeCount()-oldChat.getMessegeCount() + "");
 
 
-        holder.itemView.setOnClickListener(v -> listener.onChatClick(chat));
+        holder.itemView.setOnClickListener(v -> {
+
+            listener.onChatClick(chat);
+        });
     }
 
     @Override
