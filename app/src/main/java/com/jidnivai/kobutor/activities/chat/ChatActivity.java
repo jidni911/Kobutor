@@ -43,6 +43,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private Long chatId;
 
+    MessageService messageService ;
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable refreshChatsRunnable = new Runnable() {
         @Override
@@ -56,7 +58,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
+        messageService = new MessageService(this);
         Chat chat = (Chat) getIntent().getSerializableExtra("chat");
 
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
@@ -122,7 +124,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void loadMessages() {
-        MessageService messageService = new MessageService(this);
+
         messageService.loadChat(chatId,
                 messages -> {
                     if (messages.isEmpty()) return;

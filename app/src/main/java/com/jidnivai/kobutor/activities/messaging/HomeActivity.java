@@ -2,7 +2,12 @@ package com.jidnivai.kobutor.activities.messaging;
 
 // MainActivity.java
 
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -27,13 +36,17 @@ import com.jidnivai.kobutor.activities.profile.ProfileActivity;
 import com.jidnivai.kobutor.activities.settings.SettingsActivity;
 import com.jidnivai.kobutor.adapters.ChatsAdapter;
 import com.jidnivai.kobutor.models.Chat;
+import com.jidnivai.kobutor.models.User;
 import com.jidnivai.kobutor.service.MessageService;
+import com.jidnivai.kobutor.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class HomeActivity extends AppCompatActivity {
+
+    public static User currentUser;
 
     RecyclerView recyclerViewChats;
     ChatsAdapter chatsAdapter;
@@ -42,6 +55,8 @@ public class HomeActivity extends AppCompatActivity {
     FloatingActionButton fabNewChat;
 
     Toolbar toolbar;
+
+    MessageService messageService;
 
 
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -57,21 +72,37 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_home);
+        UserService userService = new UserService(this);
+        Long currentUserId = getSharedPreferences("kobutor", MODE_PRIVATE).getLong("id", 0L);
+        userService.getUserById(currentUserId, user -> {
+                    currentUser = user;
+            Toast.makeText(this, "Welcome " + user.getFullName() + "!", Toast.LENGTH_SHORT).show();
+                }, error -> {
+                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+        );
 
+        setContentView(R.layout.activity_home);
+        messageService = new MessageService(this);
         recyclerViewChats = findViewById(R.id.recyclerViewChats);
         fabNewChat = findViewById(R.id.fabNewChat);
         toolbar = findViewById(R.id.toolbar);
 
         // Set up RecyclerView
+        chatsAdapter = new ChatsAdapter(chatList, oldChatList, chat -> {
+
+            List<Chat> temp = oldChatList.stream().filter(c -> !c.getId().equals(chat.getId())).collect(Collectors.toCollection(ArrayList::new));
+            temp.add(chat);
+            oldChatList.clear();
+            oldChatList.addAll(temp);
+            chatsAdapter.notifyDataSetChanged();
+            // Navigate to ChatActivity for the selected chat
+            Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
+            intent.putExtra("chat", chat);
+            startActivity(intent);
+        });
         recyclerViewChats.setLayoutManager(new LinearLayoutManager(this));
-//        chatsAdapter = new ChatsAdapter(chatList, chat -> {
-//            // Navigate to ChatActivity for the selected chat
-//            Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
-//            intent.putExtra("chatId", chat.getId());
-//            startActivity(intent);
-//        });
-//        recyclerViewChats.setAdapter(chatsAdapter);
+        recyclerViewChats.setAdapter(chatsAdapter);
 
         // Simulate loading some recent chats
         loadRecentChats();
@@ -112,6 +143,7 @@ public class HomeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         MenuItem searchItem = menu.findItem(R.id.app_bar_search);
+
         SearchView searchView = (SearchView) searchItem.getActionView();
 
         // Optional: Configure the search view
@@ -139,29 +171,40 @@ public class HomeActivity extends AppCompatActivity {
         View rootView = findViewById(android.R.id.content);
         if (item.getItemId() == R.id.action_settings) {
             startActivity(new Intent(rootView.getContext(), SettingsActivity.class));
+        } else if (item.getItemId() == R.id.app_bar_key) {
+            showTokenDialog();
         }
         return true;
     }
 
     private void loadRecentChats() {
-        MessageService messageService = new MessageService(this);
         messageService.loadAllChats(
                 chats -> {
-                    chatList = chats;
-                    if(oldChatList.isEmpty()){
-                        oldChatList = chats;
-                    }
-                    chatsAdapter = new ChatsAdapter(chatList,oldChatList, chat -> {
+                    if (chats.isEmpty()) return;
+                    String seq1 = chats.stream().map(v -> v.getId().toString() + v.getMessegeCount()).collect(Collectors.joining(","));
+                    String seq2 = chatList.stream().map(v -> v.getId().toString() + v.getMessegeCount()).collect(Collectors.joining(","));
 
-                        oldChatList = oldChatList.stream().filter(c-> !c.getId().equals(chat.getId())).collect(Collectors.toCollection(ArrayList::new));
-                        oldChatList.add(chat);
-                        // Navigate to ChatActivity for the selected chat
-                        Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
-                        intent.putExtra("chat", chat);
-                        startActivity(intent);
-                    });
-                    recyclerViewChats.setAdapter(chatsAdapter);
-//                    chatsAdapter.notifyDataSetChanged();
+                    boolean isNewChat = chatList.isEmpty() ||
+                            !seq1.equals(seq2);
+
+                    if (isNewChat) {
+                        chatList.clear();
+                        chatList.addAll(chats);
+                        if (oldChatList.isEmpty()) {
+                            oldChatList.addAll(chats);
+                        }
+                        chatsAdapter.notifyDataSetChanged();
+
+//                        int scrollPosition = recyclerViewChats.computeVerticalScrollOffset();
+//                        int totalHeight = recyclerViewChats.computeVerticalScrollRange();
+//                        int screenHeight = recyclerViewChats.getHeight();
+//
+//                        boolean isNearBottom = (scrollPosition + screenHeight) >= (totalHeight - 300); // 300px threshold
+//
+//                        if (isNearBottom) {
+//                            recyclerViewChats.scrollToPosition(chatsAdapter.getItemCount() - 1);
+//                        }
+                    }
 
                 },
                 error -> {
@@ -170,6 +213,78 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
+    }
+
+
+    private void showTokenDialog() {
+        SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+
+        // Create a vertical LinearLayout
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 20);
+
+        // Create an EditText for token input
+        EditText editTextToken = new EditText(this);
+        editTextToken.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        editTextToken.setHint("Enter or paste JWT token");
+        editTextToken.setText(token);
+        layout.addView(editTextToken);
+
+        // Create a Paste Button
+        Button btnCopy = new Button(this);
+        btnCopy.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        btnCopy.setText("Copy");
+        layout.addView(btnCopy);
+        // Create a Paste Button
+        Button btnPaste = new Button(this);
+        btnPaste.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        btnPaste.setText("Paste");
+        layout.addView(btnPaste);
+
+        // Create AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("JWT Token")
+                .setView(layout)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String newToken = editTextToken.getText().toString();
+                    sharedPreferences.edit().putString("token", newToken).apply();
+                    Toast.makeText(this, "Token saved!", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Clear", (dialog, which) -> {
+                    sharedPreferences.edit().remove("token").apply();
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        btnCopy.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("jwt_token", token);
+            clipboard.setPrimaryClip(clip);
+
+            Toast.makeText(this, "Copied to clipboard!", Toast.LENGTH_SHORT).show();
+        });
+
+        // Paste Button Click Listener
+        btnPaste.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClip().getItemCount() > 0) {
+                String pastedText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+                editTextToken.setText(pastedText);
+                Toast.makeText(this, "Pasted from clipboard!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

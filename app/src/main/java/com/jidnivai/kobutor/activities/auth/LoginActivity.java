@@ -129,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("phoneNumber", user.getString("phoneNumber"));
                 editor.putString("address", user.getString("address"));
                 editor.putString("roles",user.getString("roles"));
+
 //                editor.putString("profilePicture", object.getString("profilePicture"));
                 editor.putBoolean("isLoggedIn", true);
 

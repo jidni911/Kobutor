@@ -36,6 +36,11 @@
         android:contentDescription="@string/start_new_chat"
         android:backgroundTint="@color/colorPrimaryDark"
         android:layout_margin="16dp" />
+<!--    <ProgressBar-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/progressBar"-->
+<!--        />-->
 
 
 </LinearLayout>

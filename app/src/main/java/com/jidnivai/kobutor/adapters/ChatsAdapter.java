@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jidnivai.kobutor.R;
 import com.jidnivai.kobutor.models.Chat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHolder> {
@@ -39,10 +40,20 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
         holder.nameTextView.setText(chat.getName());
         holder.lastMessageTextView.setText(chat.getLastMessage());
         holder.timeTextView.setText(chat.getLastMessageTime().toString());
-        if(chat.getMessegeCount()-oldChat.getMessegeCount()==0){
-            holder.textViewUnread.setVisibility(View.INVISIBLE);
+        if(oldChat!=null){
+            System.out.println(oldChat.getId());
+
+            if(chat.getMessegeCount()==oldChat.getMessegeCount()){
+                holder.textViewUnread.setVisibility(View.INVISIBLE);
+            } else {
+                holder.textViewUnread.setVisibility(View.VISIBLE);
+                holder.textViewUnread.setText(chat.getMessegeCount()-oldChat.getMessegeCount() + "");
+            }
         }
-        holder.textViewUnread.setText(chat.getMessegeCount()-oldChat.getMessegeCount() + "");
+        if (oldChat==null){
+            System.out.println("null");
+            holder.textViewUnread.setText(chat.getMessegeCount()+"");
+        }
 
 
         holder.itemView.setOnClickListener(v -> {
