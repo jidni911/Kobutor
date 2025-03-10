@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,6 +68,10 @@ public class ProfileActivity extends AppCompatActivity {
             sharedPreferences.edit().clear().apply();
             Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> {
             finish();
         });
     }
