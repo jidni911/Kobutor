@@ -37,6 +37,7 @@
                 android:textColor="#FFF" />
 
             <ImageView
+                android:id="@+id/profileImageId"
                 android:layout_width="40sp"
                 android:layout_height="40sp"
                 android:background="@drawable/circle_bg"

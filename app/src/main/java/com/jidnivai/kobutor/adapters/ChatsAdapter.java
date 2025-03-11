@@ -1,6 +1,7 @@
 package com.jidnivai.kobutor.adapters;
 
 // ChatsAdapter.java
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jidnivai.kobutor.R;
 import com.jidnivai.kobutor.models.Chat;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHolder> {
 
@@ -39,7 +44,31 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
         Chat oldChat = oldChatList.stream().filter(c -> c.getId().equals(chat.getId())).findFirst().orElse(null);
         holder.nameTextView.setText(chat.getName());
         holder.lastMessageTextView.setText(chat.getLastMessage());
-        holder.timeTextView.setText(chat.getLastMessageTime().toString());
+//        DateTimeFormatter formatter = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDateTime messageTime = chat.getLastMessageTime(); // Assuming this returns a LocalDateTime
+            LocalDateTime now = LocalDateTime.now();
+
+            // Check if the message is from today
+            if (ChronoUnit.DAYS.between(messageTime, now) == 0) {
+                // Message is today - use the "hh:mm a" format
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault());
+                String formattedTime = messageTime.format(formatter);
+                holder.timeTextView.setText(formattedTime);
+            } else if (ChronoUnit.DAYS.between(messageTime, now) == 1) {
+                // Message was yesterday
+                holder.timeTextView.setText("Yesterday");
+            } else if (ChronoUnit.DAYS.between(messageTime, now) < 7) {
+                // Message was within the last 7 days
+                long daysAgo = ChronoUnit.DAYS.between(messageTime, now);
+                holder.timeTextView.setText(String.format(Locale.getDefault(), "%d days ago", daysAgo));
+            } else {
+                // Message is older than 7 days - use full date format
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.getDefault());
+                String formattedDate = messageTime.format(dateFormatter);
+                holder.timeTextView.setText(formattedDate);
+            }
+        }
         if(oldChat!=null){
             System.out.println(oldChat.getId());
 

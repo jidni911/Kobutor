@@ -71,7 +71,7 @@ public class MessageServiceHelper {
             message.setUpdatedAt(LocalDateTime.parse(messageObject.getString("updatedAt")));
             message.setCreatedAt(LocalDateTime.parse(messageObject.getString("createdAt")));
         }
-        message.setSender(parseUser(messageObject.getJSONObject("sender")));
+        message.setSender(new User(messageObject.getJSONObject("sender")));
         return message;
     }
 

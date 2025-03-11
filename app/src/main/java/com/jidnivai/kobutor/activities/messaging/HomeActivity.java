@@ -179,6 +179,7 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
+
     private void loadRecentChats() {
         messageService.loadAllChats(
                 chats -> {
@@ -296,26 +297,30 @@ public class HomeActivity extends AppCompatActivity {
                     currentUser = user;
                     Toast.makeText(this, "Welcome " + user.getFullName() + "!", Toast.LENGTH_SHORT).show();
 //                    loadRecentChats();
-                    String navIconUrl = getResources().getString(R.string.api_url) + currentUser.getProfilePicture().getUrl();
+                    try {
+                        String navIconUrl = getResources().getString(R.string.api_url) + currentUser.getProfilePicture().getUrl();
 
-                    Glide.with(this)
-                            .asBitmap()
-                            .load(navIconUrl)
-                            .circleCrop() // Ensures a circular icon
-                            .into(new CustomTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                    int size = 120;//(int) getResources().getDimension(R.dimen.toolbar_icon_size); // Define a proper size in res/values/dimens.xml
-                                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, size, size, true);
-                                    Drawable drawable = new BitmapDrawable(getResources(), scaledBitmap);
-                                    toolbar.setNavigationIcon(drawable);
-                                }
+                        Glide.with(this)
+                                .asBitmap()
+                                .load(navIconUrl)
+                                .circleCrop() // Ensures a circular icon
+                                .into(new CustomTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                        int size = 120;//(int) getResources().getDimension(R.dimen.toolbar_icon_size); // Define a proper size in res/values/dimens.xml
+                                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, size, size, true);
+                                        Drawable drawable = new BitmapDrawable(getResources(), scaledBitmap);
+                                        toolbar.setNavigationIcon(drawable);
+                                    }
 
-                                @Override
-                                public void onLoadCleared(@Nullable Drawable placeholder) {
-                                    toolbar.setNavigationIcon(R.drawable.ic_launcher_foreground);
-                                }
-                            });
+                                    @Override
+                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                                        toolbar.setNavigationIcon(R.drawable.ic_launcher_foreground);
+                                    }
+                                });
+                    }catch (NullPointerException e){
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
 
                 }, error -> {
                     Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
