@@ -5,10 +5,12 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.jidnivai.kobutor.R;
 import com.jidnivai.kobutor.models.Chat;
 
@@ -84,6 +86,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
             holder.textViewUnread.setText(chat.getMessegeCount()+"");
         }
 
+//        holder.imageButton;
+        if(chat.getGroupImage()!=null){
+            Glide.with(holder.itemView.getContext())
+                    .load(holder.imageButton.getContext().getResources().getString(R.string.api_url)+chat.getGroupImage().getUrl())
+                    .placeholder(R.drawable.baseline_person_24)
+                    .into(holder.imageButton);
+        }
 
         holder.itemView.setOnClickListener(v -> {
 
@@ -107,6 +116,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
         TextView timeTextView;
 
         TextView textViewUnread;
+        ImageButton imageButton;
 
         public ChatViewHolder(View itemView) {
             super(itemView);
@@ -114,6 +124,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
             lastMessageTextView = itemView.findViewById(R.id.textViewLastMessage);
             timeTextView = itemView.findViewById(R.id.textViewTime);
             textViewUnread = itemView.findViewById(R.id.textViewUnread);
+            imageButton = itemView.findViewById(R.id.imageButton);
         }
     }
 }

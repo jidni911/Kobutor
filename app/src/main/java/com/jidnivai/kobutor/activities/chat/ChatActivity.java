@@ -4,6 +4,9 @@ package com.jidnivai.kobutor.activities.chat;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,12 +15,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.jidnivai.kobutor.R;
 import com.jidnivai.kobutor.activities.messaging.HomeActivity;
 import com.jidnivai.kobutor.activities.profile.ProfileActivity;
@@ -37,7 +45,7 @@ public class ChatActivity extends AppCompatActivity {
     private MessagesAdapter messagesAdapter;
     private List<Message> messageList = new ArrayList<>();
 
-    private Toolbar toolbar;
+    private Toolbar toolbarM;
 
     private Long currentUserId;
 
@@ -64,22 +72,55 @@ public class ChatActivity extends AppCompatActivity {
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         editTextMessage = findViewById(R.id.editTextMessage);
         btnSend = findViewById(R.id.btnSend);
-        toolbar = findViewById(R.id.toolbar);
+        toolbarM = findViewById(R.id.toolbarM);
 
         SharedPreferences sharedPreferences = getSharedPreferences("kobutor", MODE_PRIVATE);
         currentUserId = sharedPreferences.getLong("id", -1);
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> startActivity(new Intent(ChatActivity.this, ProfileActivity.class)));
+//        setSupportActionBar(toolbarM);
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbarM.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(ChatActivity.this, ChatInfoActivity.class);
+            intent.putExtra("chat",chat);
+            startActivity(intent);
+        });
 
         if (chat != null && chat.getName() != null) {
-            toolbar.setTitle(chat.getName());
+            toolbarM.setTitle(chat.getName());
             chatId = chat.getId();
         } else {
-            toolbar.setTitle("Chat");
+            toolbarM.setTitle("Chat");
+        }
+        try {
+            if(chat!=null && chat.getGroupImage() != null) {
+
+
+                String navIconUrl = getResources().getString(R.string.api_url) + chat.getGroupImage().getUrl();
+
+                Glide.with(this)
+                        .asBitmap()
+                        .load(navIconUrl)
+                        .circleCrop() // Ensures a circular icon
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                int size = 120;//(int) getResources().getDimension(R.dimen.toolbar_icon_size); // Define a proper size in res/values/dimens.xml
+                                Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, size, size, true);
+                                Drawable drawable = new BitmapDrawable(getResources(), scaledBitmap);
+                                toolbarM.setNavigationIcon(drawable);
+                                toolbarM.setPadding(40, 0, 0, 0);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                toolbarM.setNavigationIcon(R.drawable.ic_launcher_foreground);
+                            }
+                        });
+            }
+        }catch (NullPointerException e){
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         // Initialize RecyclerView once

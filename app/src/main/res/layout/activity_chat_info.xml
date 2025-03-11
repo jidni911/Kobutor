@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Group Image -->
+        <ImageView
+            android:id="@+id/groupImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            android:src="@mipmap/icon_foreground" />
+
+        <!-- Chat Name -->
+        <TextView
+            android:id="@+id/chatName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_gravity="center"
+            android:paddingTop="8dp" />
+
+        <!-- Group or Private Chat -->
+        <TextView
+            android:id="@+id/chatType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:textColor="@color/gray"
+            android:layout_gravity="center"
+            android:paddingBottom="8dp" />
+
+        <!-- Creator -->
+        <TextView
+            android:id="@+id/chatCreator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Created by: "
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Last Message -->
+        <TextView
+            android:id="@+id/lastMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last Message:"
+            android:textSize="16sp"
+            android:paddingTop="8dp" />
+
+        <!-- Last Message Time -->
+        <TextView
+            android:id="@+id/lastMessageTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last Message Time:"
+            android:textSize="14sp"
+            android:textColor="@color/gray" />
+
+        <!-- Members -->
+        <TextView
+            android:id="@+id/membersLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Members:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="12dp" />
+
+        <ListView
+            android:id="@+id/membersList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:layout_weight="2"/>
+
+        <!-- Requested Members -->
+        <TextView
+            android:id="@+id/requestedMembersLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Requested Members:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="12dp"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/requestedMembersList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:visibility="gone" />
+
+        <!-- Created & Updated Time -->
+        <TextView
+            android:id="@+id/chatCreatedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Created At:"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:paddingTop="12dp" />
+
+        <TextView
+            android:id="@+id/chatUpdatedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Updated At:"
+            android:textSize="14sp"
+            android:textColor="@color/gray" />
+
+        <!-- Message Count -->
+        <TextView
+            android:id="@+id/messageCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Messages: "
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="12dp" />
+
+    </LinearLayout>
+</ScrollView>

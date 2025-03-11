@@ -72,7 +72,7 @@ public class Image implements Serializable {
 
     public Image(JSONObject jsonObject) throws JSONException {
             if (jsonObject==null) return;
-            if(jsonObject.has("id") && !jsonObject.isNull("id") && jsonObject.get("id") instanceof Long) this.id = jsonObject.getLong("id");
+            if(jsonObject.has("id") && !jsonObject.isNull("id")) this.id = jsonObject.getLong("id");
             if (jsonObject.has("path") && !jsonObject.isNull("path") && jsonObject.get("path") instanceof String) this.path = jsonObject.getString("path");
             if (jsonObject.has("url") && !jsonObject.isNull("url") && jsonObject.get("url") instanceof String) this.url = jsonObject.getString("url");
             if (jsonObject.has("name") && !jsonObject.isNull("name") && jsonObject.get("name") instanceof String) this.name = jsonObject.getString("name");

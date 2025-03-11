@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarM"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccentLight"
@@ -37,6 +37,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:padding="12sp"
             android:hint="Type a message"
             android:inputType="text" />
 

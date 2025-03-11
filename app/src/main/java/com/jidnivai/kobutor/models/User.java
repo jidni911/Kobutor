@@ -31,6 +31,8 @@ public class User implements Serializable {
 
     private UserStatus status = UserStatus.INACTIVE;
 
+    private Audio profileMusic;
+
     private String about;
     private String website;
     private String facebook;
@@ -101,6 +103,14 @@ public class User implements Serializable {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Audio getProfileMusic() {
+        return profileMusic;
+    }
+
+    public void setProfileMusic(Audio profileMusic) {
+        this.profileMusic = profileMusic;
     }
 
     public String getPhoneNumber() {
@@ -275,7 +285,7 @@ public class User implements Serializable {
         DELETED
     }
 
-    public class Role {
+    public static class Role implements Serializable {
 
 
         private String name; // Unique role name
@@ -383,6 +393,9 @@ public class User implements Serializable {
 
         if (jsonObject.has("coverPicture") && !jsonObject.isNull("coverPicture"))
             this.coverPicture = new Image(jsonObject.getJSONObject("coverPicture"));
+
+        if (jsonObject.has("profileMusic") && !jsonObject.isNull("profileMusic"))
+            this.profileMusic = new Audio(jsonObject.getJSONObject("profileMusic"));
 
         // Handle roles (assuming it's a JSON array)
         if (jsonObject.has("roles") && !jsonObject.isNull("roles")) {

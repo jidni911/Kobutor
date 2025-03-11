@@ -49,6 +49,7 @@ import com.jidnivai.kobutor.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HomeActivity extends AppCompatActivity {
@@ -122,9 +123,9 @@ public class HomeActivity extends AppCompatActivity {
         });
 //        toolbar.setTitle("Recent Chats");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(v -> startActivity(new Intent(HomeActivity.this, ProfileActivity.class)));
         //TODO work with tool bar
 
@@ -282,7 +283,7 @@ public class HomeActivity extends AppCompatActivity {
         // Paste Button Click Listener
         btnPaste.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClip().getItemCount() > 0) {
+            if (clipboard.hasPrimaryClip() && Objects.requireNonNull(clipboard.getPrimaryClip()).getItemCount() > 0) {
                 String pastedText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
                 editTextToken.setText(pastedText);
                 Toast.makeText(this, "Pasted from clipboard!", Toast.LENGTH_SHORT).show();
@@ -296,6 +297,7 @@ public class HomeActivity extends AppCompatActivity {
         userService.getUserById(currentUserId, user -> {
                     currentUser = user;
                     Toast.makeText(this, "Welcome " + user.getFullName() + "!", Toast.LENGTH_SHORT).show();
+                    toolbar.setTitle(user.getFullName());
 //                    loadRecentChats();
                     try {
                         String navIconUrl = getResources().getString(R.string.api_url) + currentUser.getProfilePicture().getUrl();
@@ -311,6 +313,7 @@ public class HomeActivity extends AppCompatActivity {
                                         Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, size, size, true);
                                         Drawable drawable = new BitmapDrawable(getResources(), scaledBitmap);
                                         toolbar.setNavigationIcon(drawable);
+                                        toolbar.setPadding(40,0,0,0);
                                     }
 
                                     @Override

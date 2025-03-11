@@ -2,6 +2,8 @@ package com.jidnivai.kobutor.adapters;
 
 // MessagesAdapter.java
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.jidnivai.kobutor.R;
+import com.jidnivai.kobutor.activities.profile.OtherProfileActivity;
 import com.jidnivai.kobutor.models.Message;
 
 import java.util.List;
@@ -43,6 +46,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         Message message = messageList.get(position);
         holder.messageTextView.setText(message.getMessage());
+        holder.senderName.setText(message.getSender().getFullName());
+        holder.sentTime.setText(message.getCreatedAt().toString());
         Context context = holder.itemView.getContext();
         try{
             String url = context.getResources().getString(R.string.api_url) + message.getSender().getProfilePicture().getUrl();
@@ -54,6 +59,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         } catch (Exception e){
             e.printStackTrace();
         }
+        holder.profileImageId.setOnClickListener(v -> {
+            Intent intent = new Intent(context, OtherProfileActivity.class);
+            intent.putExtra("user", message.getSender());
+            context.startActivity(intent);
+        });
+        holder.messageTextView.setOnClickListener(v -> {
+            holder.senderName.setVisibility(View.VISIBLE);
+            holder.sentTime.setVisibility(View.VISIBLE);
+            new Handler().postDelayed(() -> {
+                holder.senderName.setVisibility(View.GONE);
+                holder.sentTime.setVisibility(View.GONE);
+            }, 3000);
+        });
     }
 
     @Override
@@ -69,13 +87,17 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
 
-        TextView messageTextView;
+        TextView messageTextView, senderName, sentTime;
         ImageView profileImageId;
+
+
 
         public MessageViewHolder(View itemView) {
             super(itemView);
             messageTextView = itemView.findViewById(R.id.textMessage);
             profileImageId = itemView.findViewById(R.id.profileImageId);
+            senderName = itemView.findViewById(R.id.senderName);
+            sentTime = itemView.findViewById(R.id.sentTime);
         }
     }
 }
